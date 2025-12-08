@@ -1,0 +1,133 @@
+"""
+NOMBRES PREMIERS - Version VS Code
+Affiche les nombres premiers en couleur dans le terminal
+"""
+
+import math
+import sys
+import os
+
+def effacer_console():
+    """Efface la console selon le système d'exploitation"""
+    os.system('cls' if os.name == 'nt' else 'clear')
+
+def est_premier(n):
+    """Vérifie si un nombre est premier (optimisé)"""
+    if n < 2:
+        return False
+    if n <= 3:
+        return True
+    if n % 2 == 0 or n % 3 == 0:
+        return False
+    
+    i = 5
+    while i * i <= n:
+        if n % i == 0 or n % (i + 2) == 0:
+            return False
+        i += 6
+    return True
+
+def afficher_grille(limite):
+    """Affiche une grille colorée des nombres"""
+    effacer_console()
+    
+    print("╔" + "═" * 62 + "╗")
+    print("║" + " " * 20 + "NOMBRES PREMIERS" + " " * 20 + "║")
+    print("╠" + "═" * 62 + "╣")
+    print("║ Limite : {:<49} ║".format(limite))
+    print("║" + " " * 62 + "║")
+    
+    colonnes = 10
+    lignes = (limite + colonnes - 1) // colonnes
+    
+    compteur_premiers = 0
+    
+    for ligne in range(lignes):
+        ligne_str = "║ "
+        for col in range(colonnes):
+            nombre = ligne * colonnes + col + 1
+            if nombre > limite:
+                break
+            
+            if est_premier(nombre):
+                # Rouge pour les nombres premiers
+                ligne_str += "\033[91m{:4}\033[0m ".format(nombre)
+                compteur_premiers += 1
+            else:
+                # Gris pour les autres
+                ligne_str += "\033[90m{:4}\033[0m ".format(nombre)
+        
+        # Compléter la ligne
+        ligne_str += " " * (62 - len(ligne_str)) + "║"
+        print(ligne_str)
+    
+    print("╠" + "═" * 62 + "╣")
+    
+    # Statistiques
+    pourcentage = (compteur_premiers / limite) * 100
+    
+    print("║STATISTIQUES" + " " * 46 + "║")
+    print("║" + " " * 62 + "║")
+    print("║ • Nombres premiers : {:<41} ║".format(compteur_premiers))
+    print("║ • Pourcentage : {:<44.2f}% ║".format(pourcentage))
+    
+    # Afficher la liste des nombres premiers
+    print("║" + " " * 62 + "║")
+    print("║Liste des nombres premiers :" + " " * 30 + "║")
+    print("║" + " " * 62 + "║")
+    
+    # Afficher par groupes de 10
+    premiers = [i for i in range(1, limite + 1) if est_premier(i)]
+    for i in range(0, len(premiers), 10):
+        groupe = premiers[i:i+10]
+        ligne_premiers = "║ " + ", ".join(f"\033[91m{p}\033[0m" for p in groupe)
+        print(ligne_premiers + " " * (62 - len(ligne_premiers)) + "║")
+    
+    print("╚" + "═" * 62 + "╝")
+
+def menu_principal():
+    """Affiche le menu principal"""
+    effacer_console()
+    
+    print("\033[96m" + "═" * 60 + "\033[0m")
+    print("\033[95m" + " " * 20 + "NOMBRES PREMIERS" + " " * 20 + "\033[0m")
+    print("\033[96m" + "═" * 60 + "\033[0m")
+    print()
+    print("\033[93m✨ Bienvenue dans le détecteur de nombres premiers !\033[0m")
+    print()
+    print("Ce programme affiche tous les nombres jusqu'à une limite donnée")
+    print("et met en couleur les nombres premiers.")
+    print()
+    print("\033[92m" + "─" * 60 + "\033[0m")
+    print()
+    
+    try:
+        limite = int(input("\033[94m Entrez la limite (ex: 100) : \033[0m"))
+        
+        if limite <= 0:
+            print("\033[91m Veuillez entrer un nombre positif !\033[0m")
+            input("\nAppuyez sur Entrée pour continuer...")
+            return
+        
+        if limite > 500:
+            print("\033[93m  Attention : limite élevée !\033[0m")
+            choix = input("Continuer ? (o/n) : ")
+            if choix.lower() not in ['o', 'oui', 'y', 'yes']:
+                return
+        
+        afficher_grille(limite)
+        
+        print()
+        input("\033[94mAppuyez sur Entrée pour continuer...\033[0m")
+        
+    except ValueError:
+        print("\033[91m Entrée invalide ! Veuillez entrer un nombre.\033[0m")
+        input("\nAppuyez sur Entrée pour continuer...")
+    except KeyboardInterrupt:
+        print("\n\n\033[93m Au revoir !\033[0m")
+        sys.exit(0)
+
+# === PROGRAMME PRINCIPAL ===
+if __name__ == "__main__":
+    while True:
+        menu_principal()
