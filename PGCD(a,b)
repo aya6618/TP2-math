@@ -1,0 +1,15 @@
+def pgcd(a, b):
+    print(f"Calcul du PGCD de {a} et {b}")
+    while b != 0:
+        reste = a % b
+        print(f"{a} = {b} x {a // b} + {reste}")
+        a, b = b, reste
+    print(f"Le PGCD est {a}")
+    return a
+
+# Lecture des valeurs
+a = int(input("Entrez le premier entier : "))
+b = int(input("Entrez le deuxième entier : "))
+
+# Calcul
+pgcd(a, b)
