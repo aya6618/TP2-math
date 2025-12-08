@@ -1,0 +1,131 @@
+"""
+Calcul de PGCD(a,b,c) × PPCM(a,b,c)
+"""
+
+print("=" * 60)
+print("CALCUL DE PGCD(a,b,c) × PPCM(a,b,c)")
+print("=" * 60)
+
+def pgcd_deux(x, y):
+    """Calcule le PGCD de deux nombres"""
+    while y != 0:
+        x, y = y, x % y
+    return abs(x)
+
+def pgcd_trois(a, b, c):
+    """Calcule le PGCD de trois nombres"""
+    return pgcd_deux(pgcd_deux(a, b), c)
+
+def ppcm_deux(x, y):
+    """Calcule le PPCM de deux nombres"""
+    if x == 0 or y == 0:
+        return 0
+    return abs(x * y) // pgcd_deux(x, y)
+
+def ppcm_trois(a, b, c):
+    """Calcule le PPCM de trois nombres"""
+    return ppcm_deux(ppcm_deux(a, b), c)
+
+def calcul_expression(a, b, c):
+    """Calcule PGCD(a,b,c) × PPCM(a,b,c) et vérifie des propriétés"""
+    # Calcul des valeurs
+    pgcd = pgcd_trois(a, b, c)
+    ppcm = ppcm_trois(a, b, c)
+    produit = pgcd * ppcm
+    
+    # Affichage détaillé
+    print("\n" + "=" * 60)
+    print(f" CALCUL POUR a={a}, b={b}, c={c}")
+    print("=" * 60)
+    
+    print("\n CALCUL DU PGCD :")
+    print(f"1. pgcd({a}, {b}) = {pgcd_deux(a, b)}")
+    print(f"2. pgcd({pgcd_deux(a, b)}, {c}) = {pgcd}")
+    
+    print("\n CALCUL DU PPCM :")
+    print(f"1. ppcm({a}, {b}) = {ppcm_deux(a, b)}")
+    print(f"2. ppcm({ppcm_deux(a, b)}, {c}) = {ppcm}")
+    
+    print("\n" + "=" * 60)
+    print("RÉSULTAT :")
+    print("=" * 60)
+    print(f"PGCD({a}, {b}, {c}) = {pgcd}")
+    print(f"PPCM({a}, {b}, {c}) = {ppcm}")
+    print(f"PGCD × PPCM = {pgcd} × {ppcm} = {produit}")
+    
+    # Vérification de la relation pour deux nombres (pour comparaison)
+    print("\n" + "=" * 60)
+    print(" COMPARAISON AVEC LA FORMULE POUR DEUX NOMBRES :")
+    print("=" * 60)
+    print("Pour deux nombres : pgcd(a,b) × ppcm(a,b) = a × b")
+    
+    # Calcul pour chaque paire
+    paires = [(a, b), (a, c), (b, c)]
+    for x, y in paires:
+        pgcd_xy = pgcd_deux(x, y)
+        ppcm_xy = ppcm_deux(x, y)
+        print(f"• pgcd({x},{y})×ppcm({x},{y}) = {pgcd_xy}×{ppcm_xy} = {pgcd_xy * ppcm_xy}")
+        print(f"  {x}×{y} = {x * y} {'✓' if pgcd_xy * ppcm_xy == x * y else '✗'}")
+    
+    # Relation pour trois nombres
+    print(f"\n Pour trois nombres, on a :")
+    print(f"   a × b × c = {a} × {b} × {c} = {a * b * c}")
+    print(f"   PGCD × PPCM = {produit}")
+    print(f"   Rapport : (a×b×c) / (PGCD×PPCM) = {a * b * c} / {produit} = {(a * b * c) / produit if produit != 0 else 'indéfini'}")
+    
+    # Diviseurs communs
+    if pgcd != 0:
+        print(f"\n DIVISEURS :")
+        print(f"   a = {pgcd} × {a // pgcd}")
+        print(f"   b = {pgcd} × {b // pgcd}")
+        print(f"   c = {pgcd} × {c // pgcd}")
+    
+    return pgcd, ppcm, produit
+
+# === INTERFACE UTILISATEUR ===
+try:
+    print("\n" + "=" * 60)
+    print("SAISIE DES NOMBRES")
+    print("=" * 60)
+    
+    a = int(input("Entrez le premier nombre (a) : "))
+    b = int(input("Entrez le deuxième nombre (b) : "))
+    c = int(input("Entrez le troisième nombre (c) : "))
+    
+    pgcd, ppcm, produit = calcul_expression(a, b, c)
+    
+    # Exemples supplémentaires
+    print("\n" + "=" * 60)
+    print("EXEMPLES SUPPLÉMENTAIRES")
+    print("=" * 60)
+    
+    exemples = [
+        (12, 18, 24),
+        (15, 25, 35),
+        (8, 12, 20),
+        (7, 11, 13),  # Nombres premiers
+        (6, 10, 15),
+    ]
+    
+    for ex_a, ex_b, ex_c in exemples:
+        ex_pgcd = pgcd_trois(ex_a, ex_b, ex_c)
+        ex_ppcm = ppcm_trois(ex_a, ex_b, ex_c)
+        print(f"Pour ({ex_a}, {ex_b}, {ex_c}) : PGCD={ex_pgcd}, PPCM={ex_ppcm}, PGCD×PPCM={ex_pgcd * ex_ppcm}")
+    
+    # Observation mathématique
+    print("\n" + "=" * 60)
+    print("OBSERVATION MATHÉMATIQUE")
+    print("=" * 60)
+    print("Pour deux nombres : PGCD(a,b) × PPCM(a,b) = a × b")
+    print("Pour trois nombres : PGCD(a,b,c) × PPCM(a,b,c) ≠ a × b × c en général")
+    print("En fait : PGCD(a,b,c) × PPCM(a,b,c) divise a × b × c")
+    print(f"Exemple avec vos nombres :")
+    print(f"  {a} × {b} × {c} = {a * b * c}")
+    print(f"  {produit} divise {a * b * c} : {a * b * c % produit == 0}")
+    if a * b * c % produit == 0:
+        print(f"  Rapport : {a * b * c} ÷ {produit} = {a * b * c // produit}")
+    
+except ValueError:
+    print("Erreur : Veuillez entrer des nombres entiers valides !")
+except ZeroDivisionError:
+    print("Erreur : Division par zéro !")
