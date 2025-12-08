@@ -1,0 +1,127 @@
+"""
+PGCD de trois nombres : pgcd(a, b, c) = ?
+"""
+
+print("=" * 60)
+print("PGCD DE TROIS NOMBRES : pgcd(a, b, c) = ?")
+print("=" * 60)
+
+print("\n RÈGLE MATHÉMATIQUE :")
+print("=" * 60)
+print("pgcd(a, b, c) = pgcd(pgcd(a, b), c)")
+print("              = pgcd(a, pgcd(b, c))")
+print("              = pgcd(pgcd(a, c), b)")
+print("\nAutrement dit : on calcule le PGCD de deux nombres,")
+print("puis le PGCD du résultat avec le troisième nombre.")
+print("L'ordre n'a pas d'importance (propriété associative).")
+
+def calcul_pgcd(x, y):
+    """Calcule le PGCD de deux nombres avec l'algorithme d'Euclide"""
+    while y != 0:
+        x, y = y, x % y
+    return abs(x)
+
+def pgcd_trois_nombres(a, b, c):
+    """Calcule le PGCD de trois nombres"""
+    # Première méthode : pgcd(pgcd(a,b), c)
+    pgcd_ab = calcul_pgcd(a, b)
+    pgcd_final = calcul_pgcd(pgcd_ab, c)
+    
+    # Deuxième méthode pour vérification
+    pgcd_bc = calcul_pgcd(b, c)
+    pgcd_final2 = calcul_pgcd(a, pgcd_bc)
+    
+    # Vérification que les deux méthodes donnent le même résultat
+    assert pgcd_final == pgcd_final2, "Les deux méthodes devraient donner le même résultat"
+    
+    return pgcd_final
+
+# === INTERFACE UTILISATEUR ===
+print("\n" + "=" * 60)
+print("CALCUL PRATIQUE")
+print("=" * 60)
+
+try:
+    # Saisie des trois nombres
+    a = int(input("Entrez le premier nombre (a) : "))
+    b = int(input("Entrez le deuxième nombre (b) : "))
+    c = int(input("Entrez le troisième nombre (c) : "))
+    
+    print("\n" + "=" * 60)
+    print(f"Nombres saisis : a = {a}, b = {b}, c = {c}")
+    print("=" * 60)
+    
+    # Calcul étape par étape
+    print("\n CALCUL ÉTAPE PAR ÉTAPE :")
+    print("-" * 40)
+    
+    # Méthode 1
+    print("Méthode 1 : pgcd(pgcd(a,b), c)")
+    pgcd_ab = calcul_pgcd(a, b)
+    print(f"1. pgcd({a}, {b}) = {pgcd_ab}")
+    resultat_final = calcul_pgcd(pgcd_ab, c)
+    print(f"2. pgcd({pgcd_ab}, {c}) = {resultat_final}")
+    
+    print("\nMéthode 2 : pgcd(a, pgcd(b,c))")
+    pgcd_bc = calcul_pgcd(b, c)
+    print(f"1. pgcd({b}, {c}) = {pgcd_bc}")
+    resultat_final2 = calcul_pgcd(a, pgcd_bc)
+    print(f"2. pgcd({a}, {pgcd_bc}) = {resultat_final2}")
+    
+    # Vérification
+    print("\n" + "=" * 60)
+    print("RÉSULTAT FINAL :")
+    print("=" * 60)
+    print(f"pgcd({a}, {b}, {c}) = {resultat_final}")
+    
+    # Vérification de la divisibilité
+    print("\n VÉRIFICATION :")
+    print(f"• {a} ÷ {resultat_final} = {a // resultat_final} (reste {a % resultat_final})")
+    print(f"• {b} ÷ {resultat_final} = {b // resultat_final} (reste {b % resultat_final})")
+    print(f"• {c} ÷ {resultat_final} = {c // resultat_final} (reste {c % resultat_final})")
+    
+    if a % resultat_final == 0 and b % resultat_final == 0 and c % resultat_final == 0:
+        print("✓ Tous les nombres sont divisibles par le PGCD")
+    
+    # Trouver tous les diviseurs communs
+    print("\n TOUS LES DIVISEURS COMMUNS :")
+    diviseurs = []
+    for d in range(1, min(abs(a), abs(b), abs(c)) + 1):
+        if a % d == 0 and b % d == 0 and c % d == 0:
+            diviseurs.append(d)
+    
+    print(f"Diviseurs communs de {a}, {b}, {c} : {diviseurs}")
+    print(f"Le PLUS GRAND est : {max(diviseurs)} (c'est le PGCD)")
+    
+    # Exemple avec propriété
+    print("\n PROPRIÉTÉ IMPORTANTE :")
+    print(f"Si pgcd(a,b,c) = d, alors il existe des entiers x, y, z tels que :")
+    print(f"  a = d × {a // resultat_final}")
+    print(f"  b = d × {b // resultat_final}")
+    print(f"  c = d × {c // resultat_final}")
+    
+except ValueError:
+    print("Erreur : Veuillez entrer des nombres entiers valides !")
+
+# === EXEMPLES DÉMONSTRATIFS ===
+print("\n" + "=" * 60)
+print("EXEMPLES CLASSIQUES :")
+print("=" * 60)
+
+exemples = [
+    (12, 18, 24),
+    (15, 25, 35),
+    (8, 12, 20),
+    (17, 19, 23),  # Nombres premiers entre eux
+    (0, 12, 18),   # Avec zéro
+]
+
+for a_ex, b_ex, c_ex in exemples:
+    if a_ex == 0 or b_ex == 0 or c_ex == 0:
+        # Pour le PGCD avec zéro : pgcd(0, x) = |x|
+        pgcd_ab = calcul_pgcd(a_ex, b_ex)
+        pgcd_final = calcul_pgcd(pgcd_ab, c_ex)
+        print(f"pgcd({a_ex}, {b_ex}, {c_ex}) = {pgcd_final} (attention avec zéro)")
+    else:
+        pgcd_final = pgcd_trois_nombres(a_ex, b_ex, c_ex)
+        print(f"pgcd({a_ex}, {b_ex}, {c_ex}) = {pgcd_final}")
