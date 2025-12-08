@@ -1,0 +1,78 @@
+"""
+Programme pour calculer le PGCD et le PPCM de deux nombres
+"""
+
+def calcul_pgcd(a, b):
+    """Calcule le PGCD en utilisant l'algorithme d'Euclide"""
+    print("Calcul du PGCD avec l'algorithme d'Euclide :")
+    print(f"Début : a = {a}, b = {b}")
+    
+    # Garder les valeurs originales pour l'affichage
+    original_a, original_b = a, b
+    
+    # Algorithme d'Euclide
+    while b != 0:
+        quotient = a // b
+        reste = a % b
+        print(f"{a} = {b} × {quotient} + {reste}")
+        a, b = b, reste
+    
+    pgcd = abs(a)  # PGCD est toujours positif
+    print(f"PGCD({original_a}, {original_b}) = {pgcd}")
+    return pgcd
+
+def calcul_ppcm(a, b):
+    """Calcule le PPCM en utilisant la formule : PPCM(a,b) = |a*b| / PGCD(a,b)"""
+    pgcd = calcul_pgcd(a, b)
+    ppcm = abs(a * b) // pgcd
+    print(f"PPCM({a}, {b}) = |{a} × {b}| / {pgcd} = {ppcm}")
+    return ppcm
+
+def verifier_resultats(a, b, pgcd, ppcm):
+    """Vérifie les résultats avec des tests"""
+    print("\n Vérification des résultats :")
+    print(f"• {a} ÷ {pgcd} = {a // pgcd} (division exacte)")
+    print(f"• {b} ÷ {pgcd} = {b // pgcd} (division exacte)")
+    print(f"• {ppcm} ÷ {a} = {ppcm // a} (division exacte)")
+    print(f"• {ppcm} ÷ {b} = {ppcm // b} (division exacte)")
+
+# === INTERFACE UTILISATEUR ===
+print("=" * 50)
+print("CALCULATRICE PGCD & PPCM")
+print("=" * 50)
+
+# Saisie des nombres
+try:
+    nombre1 = int(input("Entrez le premier nombre : "))
+    nombre2 = int(input("Entrez le deuxième nombre : "))
+    
+    print("\n" + "=" * 50)
+    print(f"Nombres saisis : {nombre1} et {nombre2}")
+    print("=" * 50)
+    
+    # Calculs
+    print("\n CALCUL DU PGCD :")
+    pgcd_resultat = calcul_pgcd(nombre1, nombre2)
+    
+    print("\n CALCUL DU PPCM :")
+    ppcm_resultat = calcul_ppcm(nombre1, nombre2)
+    
+    # Vérification
+    verifier_resultats(nombre1, nombre2, pgcd_resultat, ppcm_resultat)
+    
+    # Résumé final
+    print("\n" + "£" * 50)
+    print("RÉSULTATS FINAUX :")
+    print(f"   PGCD({nombre1}, {nombre2}) = {pgcd_resultat}")
+    print(f"   PPCM({nombre1}, {nombre2}) = {ppcm_resultat}")
+    print("£" * 50)
+    
+    # Relation entre PGCD et PPCM
+    print(f"\n Relation : PGCD × PPCM = {pgcd_resultat} × {ppcm_resultat} = {pgcd_resultat * ppcm_resultat}")
+    print(f"   {nombre1} × {nombre2} = {nombre1 * nombre2}")
+    print(f"   Vérification : {pgcd_resultat * ppcm_resultat} = {nombre1 * nombre2} ✓")
+    
+except ValueError:
+    print("Erreur : Veuillez entrer des nombres entiers valides !")
+except ZeroDivisionError:
+    print("Erreur : La division par zéro n'est pas possible !")
